@@ -11,7 +11,7 @@ import java.util.concurrent.TimeoutException;
 public class Reciever {
     private final static String EXCHANGE_NAME = "test_exchange";
 
-    public static void main(String[] args) throws IOException, TimeoutException {
+    public static void main(String[] args) throws IOException, TimeoutException, InterruptedException {
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost("localhost");
         Connection connection = factory.newConnection();
@@ -21,13 +21,14 @@ public class Reciever {
         System.out.println(queueName);
         channel.queueBind(queueName,EXCHANGE_NAME,"");
         System.out.println("Waiting for message.To exit press CTRL+C");
-        Consumer consumer = new DefaultConsumer(channel){
-            @Override
-            public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
-                String message = new String(body,"UTF-8");
-                System.out.println("recieve:" + message);
-            }
-        };
-        channel.basicConsume(queueName,true,consumer);
+        QueueingConsumer consumer = new QueueingConsumer(channel);
+        // 指定接收者，第二个参数为自动应答，无需手动应答
+        channel.basicConsume(queueName, true, consumer);
+        while (true)
+        {
+            QueueingConsumer.Delivery delivery = consumer.nextDelivery();
+            String message = new String(delivery.getBody());
+            System.out.println(" [x] Received '" + message + "'");
+        }
     }
 }
