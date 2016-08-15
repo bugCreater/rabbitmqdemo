@@ -1,0 +1,8 @@
+1.在这个例子中有一个生产者两个消费者.这里模拟了当要进行较耗时操作时优化的方案.
+用消息队列.调用方只需要发一个消息.而监听方收到消息后进行耗时操作.这样异步的进行.从而达到提高系统响应时间
+
+2.关于自动确认
+channel.basicConsume(String queueName,boolean autoack,Consumer consumer);
+如果autoack设置为了false.就要手动进行确认.
+channel.basicAck(envelope.getDeliveryTag(), false);
+

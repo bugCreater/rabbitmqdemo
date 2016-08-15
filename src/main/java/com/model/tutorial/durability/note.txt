@@ -1,0 +1,9 @@
+1.持久化
+在定义队列的时候.可以给队列定义为持久化的队列。也就是说在rabbitmq已经关闭了.再重启.队列信息不会丢失
+boolean durable = true;
+channel.queueDeclare(QUEUE_NAME,durable,false,false,null);
+2.公平调度
+我们可以设置同一时刻不要发超过一个任务给消费者.直到它对上一个消息作出回应.这样rabbitmq就会把消息发送给下一个空闲的消费者
+int prefetchCount = 1;
+channel.basicQos(prefetchCount);
+channel.basicConsume(QUEUE_NAME,true,consumer);
