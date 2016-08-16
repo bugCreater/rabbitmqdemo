@@ -13,7 +13,7 @@ public class Reciever {
 
     public static void main(String[] args) throws IOException, TimeoutException {
         ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost("localhost");
+        factory.setHost("192.168.230.128");
         Connection connection = factory.newConnection();
         Channel channel = connection.createChannel();
         channel.queueDeclare(QUEUE_NAME,false,false,false,null);
